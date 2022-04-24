@@ -10,23 +10,25 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedDate from 'dayjs/plugin/localizedFormat'
 dayjs.extend(relativeTime)
 dayjs.extend(localizedDate)
+
 export default {
   props: {
     timestamp: {
       required: true,
-      type: Number,
+      type: Number
     }
   },
   methods: {
-    diffForHumans() {
-      return dayjs.unix(this.timestamp).fromNow();
+    diffForHumans () {
+      return dayjs.unix(this.timestamp).fromNow()
     },
-    humanFriendlyDate() {
-      return dayjs.unix(this.timestamp).format("llll");
+    humanFriendlyDate () {
+      return dayjs.unix(this.timestamp).format('llll')
     }
-  },
+  }
 }
 </script>
 
-<style>
+<style scoped>
+
 </style>

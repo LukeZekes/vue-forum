@@ -2,7 +2,7 @@
   <div class="col-full">
     <form @submit.prevent="save">
       <div class="form-group">
-        <textarea v-model="postText" name="" id="" cols="30" rows="10" class="form-input" />
+        <textarea v-model="text" name="" id="" cols="30" rows="10" class="form-input"/>
       </div>
       <div class="form-actions">
         <button class="btn-blue">Submit post</button>
@@ -15,26 +15,24 @@
 export default {
   data () {
     return {
-      postText: ''
+      text: ''
     }
   },
   methods: {
-    save() {
-      const postId = "ggqq" + Math.random();
+    save () {
       const post = {
-        id: postId,
-        text: this.postText,
+        text: this.text,
         publishedAt: Math.floor(Date.now() / 1000),
-        userId: "rpbB8C6ifrYmNDufMERWfQUoa202",
-      };
-      this.$emit('save', {post})
-      // this.posts.push(post);
-      // this.thread.posts.push(postId);
-      this.postText = "";
-    },
-  },
-};
+        userId: 'rpbB8C6ifrYmNDufMERWfQUoa202'
+      }
+      this.$emit('save', { post }) // access under eventData.post
+
+      this.text = ''
+    }
+  }
+}
 </script>
 
-<style>
+<style scoped>
+
 </style>

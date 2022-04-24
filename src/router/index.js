@@ -1,16 +1,29 @@
-import PageHome from '@/components/page/Home.vue'
-import PageThreadShow from '@/components/page/ThreadShow.vue'
-import PageNotFound from '@/components/page/NotFound.vue'
-import Forum from '@/components/page/Forum.vue'
-import Category from '@/components/page/Category.vue'
+import Home from '@/pages/Home'
+import ThreadShow from '@/pages/ThreadShow'
+import NotFound from '@/pages/NotFound'
+import Forum from '@/pages/Forum'
+import Category from '@/pages/Category'
 import { createRouter, createWebHistory } from 'vue-router'
 import sourceData from '@/data.json'
+import Profile from '@/pages/Profile'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: PageHome
+    component: Home
+  },
+  {
+    path: '/me',
+    name: 'Profile',
+    component: Profile,
+    meta: { toTop: true, smoothScroll: true }
+  },
+  {
+    path: '/me/edit',
+    name: 'ProfileEdit',
+    component: Profile,
+    props: { edit: true }
   },
   {
     path: '/category/:id',
@@ -27,33 +40,40 @@ const routes = [
   {
     path: '/thread/:id',
     name: 'ThreadShow',
-    component: PageThreadShow,
+    component: ThreadShow,
     props: true,
     beforeEnter (to, from, next) {
-      //Check if thread exists
+      // check if thread exists
       const threadExists = sourceData.threads.find(thread => thread.id === to.params.id)
-      //if thread exists, continue
-      if (threadExists)
+      // if exists continue
+      if (threadExists) {
         return next()
-      //If thread does not exist, reroute to PageNotFound path
-      else
-        next(
-          {
-            name: 'PageNotFound',
-            params: {pathMatch: to.path.substring(1).split('/')},
-            query: to.query,
-            hash: to.hash
-          }
-          )
+      } else {
+        next({
+          name: 'NotFound',
+          params: { pathMatch: to.path.substring(1).split('/') },
+          // preserve existing query and hash
+          query: to.query,
+          hash: to.hash
+        })
+      }
+      // if doesnt exist redirect to not found
     }
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'PageNotFound',
-    component: PageNotFound
+    name: 'NotFound',
+    component: NotFound
   }
 ]
+
 export default createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior (to) {
+    const scroll = {}
+    if (to.meta.toTop) scroll.top = 0
+    if (to.meta.smoothScroll) scroll.behavior = 'smooth'
+    return scroll
+  }
 })
